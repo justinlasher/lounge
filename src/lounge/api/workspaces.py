@@ -88,3 +88,36 @@ def list_members(
         data["online"] = u.id in online
         out.append(data)
     return out
+
+
+@router.post("/{workspace_id}/members/{user_id}")
+def add_member(
+    workspace_id: int,
+    user_id: int,
+    user: User = Depends(auth.get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Add an existing user to a workspace (admin only)."""
+    get_workspace(session, workspace_id)
+    auth.require_member(session, workspace_id, user)
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin privileges required")
+    target = session.get(User, user_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    existing = session.execute(
+        select(Membership).where(
+            Membership.workspace_id == workspace_id,
+            Membership.user_id == user_id,
+        )
+    ).scalar_one_or_none()
+    if existing is not None:
+        raise HTTPException(status_code=409, detail="Already a member")
+    membership = Membership(workspace_id=workspace_id, user_id=user_id)
+    session.add(membership)
+    session.commit()
+    events.hub.broadcast(
+        workspace_id,
+        {"type": "member.add", "user_id": user_id, "username": target.username},
+    )
+    return target.to_dict()
