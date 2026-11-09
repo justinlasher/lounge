@@ -1,0 +1,39 @@
+[project]
+name = "lounge"
+version = "0.1.0"
+description = "Lounge — self-hosted Discord-style chat platform with a built-in MCP server."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlalchemy>=2",
+    "bcrypt",
+    "pyjwt",
+    "mcp[cli]",
+    "httpx",
+]
+
+[project.scripts]
+lounge = "lounge.__main__:main"
+lounge-mcp = "lounge.mcp_server:main"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "websocket-client",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lounge"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+addopts = "-q"

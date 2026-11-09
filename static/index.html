@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lounge</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- Login view -->
+  <main id="login-view" class="login-view" hidden>
+    <form id="login-form" class="login-card" aria-label="Sign in to Lounge">
+      <h1 class="login-title">Lounge</h1>
+      <p id="login-sub" class="login-sub">Sign in to continue</p>
+      <label class="field">
+        <span>Username</span>
+        <input id="login-username" name="username" autocomplete="username" required />
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+      </label>
+      <label class="field" id="setup-token-field" hidden>
+        <span>Setup token</span>
+        <input id="login-setup-token" name="setup_token" />
+      </label>
+      <button type="submit" class="primary-btn">Sign in</button>
+      <p id="login-error" class="login-error" role="alert"></p>
+    </form>
+  </main>
+
+  <!-- App shell -->
+  <div id="app-view" class="app" hidden>
+    <!-- 1. Workspace rail -->
+    <nav class="rail" aria-label="Workspaces">
+      <ul id="workspace-list" class="rail-list"></ul>
+      <button id="add-workspace" class="rail-add" aria-label="Create workspace" title="Create workspace">+</button>
+    </nav>
+
+    <!-- 2. Channel sidebar -->
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <span id="workspace-name">—</span>
+      </header>
+      <div id="channel-tree" class="channel-tree" aria-label="Channels"></div>
+      <section class="member-drawer">
+        <button id="member-toggle" class="member-toggle" aria-expanded="true" aria-controls="member-list">
+          <span class="caret">▾</span> Members
+        </button>
+        <ul id="member-list" class="member-list"></ul>
+      </section>
+    </aside>
+
+    <!-- 3. Chat pane -->
+    <section class="chat">
+      <header class="chat-header">
+        <h2 id="channel-title"># general</h2>
+        <div class="chat-header-actions">
+          <button id="new-channel-btn" class="ghost-btn" aria-label="New channel" title="New channel">＋ Channel</button>
+          <button id="logout-btn" class="ghost-btn" aria-label="Sign out" title="Sign out">Sign out</button>
+        </div>
+      </header>
+      <div id="message-list" class="message-list" aria-live="polite"></div>
+      <div id="typing-indicator" class="typing-indicator"></div>
+      <form id="composer" class="composer">
+        <textarea id="composer-input" rows="1" placeholder="Message" aria-label="Message input"></textarea>
+      </form>
+    </section>
+
+    <!-- Thread panel (slides in from the right) -->
+    <section id="thread-panel" class="thread-panel" hidden aria-label="Thread">
+      <header class="thread-header">
+        <h3 id="thread-title">Thread</h3>
+        <button id="thread-close" class="ghost-btn" aria-label="Close thread">✕</button>
+      </header>
+      <div id="thread-messages" class="message-list"></div>
+      <form id="thread-composer" class="composer">
+        <textarea id="thread-input" rows="1" placeholder="Reply in thread" aria-label="Thread reply input"></textarea>
+      </form>
+    </section>
+  </div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
